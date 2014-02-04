@@ -2,10 +2,10 @@
 /**
  * File Name CreatePostsVCWP.php
  * @package WordPress
- * @subpackage ParentTheme
+ * @subpackage CreatePostsVCWP
  * @license GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * @version 1.4
- * @updated 02.10.13
+ * @version 2.0
+ * @updated 02.14.14
  *
  * Description:
  * Create posts by from an array of data
@@ -59,22 +59,20 @@ if ( class_exists( 'CreatePostsVCWP' ) ) return;
 
 /**
  * CreatePostsVCWP Class
- *
- * @version 1.1
- * @updated 02.10.13
  **/
 class CreatePostsVCWP {
 	
 	
+	
 	/**
-	 * Option name
+	 * Arguments for handling post imports
 	 * 
 	 * @access public
-	 * @var string
-	 * Description:
-	 * Used for various purposes when an import may be adding content to an option.
+	 * @var array
 	 **/
-	var $option_name = false;
+	var $args = array();
+	
+	
 	
 	/**
 	 * Current post position in iterating array
@@ -84,6 +82,8 @@ class CreatePostsVCWP {
 	 **/
 	var $current_post = -1;
 	
+	
+	
 	/**
 	 * In the loop
 	 * 
@@ -91,6 +91,8 @@ class CreatePostsVCWP {
 	 * @var bool
 	 **/
 	var $in_the_loop = false;
+	
+	
 	
 	/**
 	 * Required Import Post Fields
@@ -104,7 +106,9 @@ class CreatePostsVCWP {
 	var $required_post_fields = array(
 		'post_type',
 		'post_title',
-		);
+	);
+	
+	
 	
 	/**
 	 * Import Post Status
@@ -114,6 +118,8 @@ class CreatePostsVCWP {
 	 **/
 	var $post_status = 'draft';
 	
+	
+	
 	/**
 	 * Import Post Comment Status
 	 * 
@@ -121,6 +127,18 @@ class CreatePostsVCWP {
 	 * @var string
 	 **/
 	var $comment_status = 'closed';
+	
+	
+	
+	/**
+	 * Post Author ID
+	 * 
+	 * @access public
+	 * @var int
+	 **/
+	var $post_author = 0;
+	
+	
 	
 	/**
 	 * Has Posts
@@ -130,6 +148,8 @@ class CreatePostsVCWP {
 	 **/
 	var $has_posts = 0;
 	
+	
+	
 	/**
 	 * Post Count
 	 * 
@@ -137,6 +157,8 @@ class CreatePostsVCWP {
 	 * @var numeric
 	 **/
 	var $post_count = 0;
+	
+	
 	
 	/**
 	 * overwrite_posts
@@ -149,16 +171,7 @@ class CreatePostsVCWP {
 	 **/
 	var $overwrite_posts = false;
 	
-	/**
-	 * append_posts
-	 * 
-	 * @access public
-	 * @var bool
-	 *
-	 * Description:
-	 * Bool to decide if existing posts should be appended to the db or ignored.
-	 **/
-	var $append_posts = false;
+	
 	
 	/**
 	 * posts
@@ -171,6 +184,8 @@ class CreatePostsVCWP {
 	 **/
 	var $posts = array();
 	
+	
+	
 	/**
 	 * post
 	 * 
@@ -181,6 +196,8 @@ class CreatePostsVCWP {
 	 * Array of iterating single post data as it's being imported.
 	 **/
 	var $post = false;
+	
+	
 	
 	/**
 	 * post meta
@@ -193,6 +210,8 @@ class CreatePostsVCWP {
 	 **/
 	var $post_meta = false;
 	
+	
+	
 	/**
 	 * post meta object
 	 * 
@@ -203,6 +222,8 @@ class CreatePostsVCWP {
 	 * Array of iterating single post post_meta processing data object
 	 **/
 	var $_post_meta = false;
+	
+	
 	
 	/**
 	 * post options
@@ -215,6 +236,8 @@ class CreatePostsVCWP {
 	 **/
 	var $post_options = false; 
 	
+	
+	
 	/**
 	 * post options object
 	 * 
@@ -225,6 +248,8 @@ class CreatePostsVCWP {
 	 * Array of iterating single post option processing data object
 	 **/
 	var $_post_options = false;
+	
+	
 	
 	/**
 	 * post options
@@ -237,6 +262,8 @@ class CreatePostsVCWP {
 	 **/
 	var $post_terms = false; 
 	
+	
+	
 	/**
 	 * post options object
 	 * 
@@ -247,6 +274,8 @@ class CreatePostsVCWP {
 	 * Array of iterating single post option processing data object
 	 **/
 	var $_post_terms = false;
+	
+	
 	
 	/**
 	 * existing_post_id
@@ -259,6 +288,8 @@ class CreatePostsVCWP {
 	 **/
 	var $existing_post_id = 0;
 	
+	
+	
 	/**
 	 * imported_post_ids
 	 * 
@@ -269,6 +300,8 @@ class CreatePostsVCWP {
 	 * Array of imported post ids from wp_insert_post
 	 **/
 	var $imported_post_ids = array();
+	
+	
 	
 	/**
 	 * current_post_id
@@ -281,6 +314,8 @@ class CreatePostsVCWP {
 	 **/
 	var $current_post_id = null;
 	
+	
+	
 	/**
 	 * errored_posts
 	 * 
@@ -291,6 +326,16 @@ class CreatePostsVCWP {
 	 * Array of errored posts found during import
 	 **/
 	var $errored_posts = array();
+	
+	
+	
+	/**
+	 * errors
+	 * 
+	 * @access public
+	 * @var array
+	 **/
+	var $errors = array();
 	
 	
 	
@@ -334,13 +379,31 @@ class CreatePostsVCWP {
 	
 	
 	/**
+	 * error
+	 *
+	 * @version 1.0
+	 * @updated 00.00.00
+	 **/
+	function error( $error_key ) {
+		
+		$this->errors[] = $error_key;
+		
+	} // end function error
+	
+	
+	
+	
+	
+	
+	/**
 	 * add_posts
 	 *
 	 * @version 1.0
 	 * @updated 02.10.13
 	 **/
-	function add_posts( $posts ) {
+	function add_posts( $posts, $args ) {
 		
+		$this->set_import_args( $args );
 		$this->set( 'posts', $posts );
 		$this->set_post_count();
 		
@@ -368,6 +431,10 @@ class CreatePostsVCWP {
 			
 			// $this->update_post_option_groups();
 			
+		} else {
+			
+			$this->error('no-posts');
+			
 		} // end if ( $this->have_posts() )
 		
 	} // end function add_posts 
@@ -378,15 +445,43 @@ class CreatePostsVCWP {
 	
 	
 	/**
-	 * do_action
+	 * set_import_args
 	 *
 	 * @version 1.0
-	 * @updated 04.01.13
+	 * @updated 02.04.14
+	 **/
+	function set_import_args( $args = array() ) {
+		
+		if ( isset( $args ) AND ! empty( $args ) AND is_array( $args ) ) {
+			$this->set( 'args', array_merge( $this->args, $args ) );
+		}
+		
+		foreach ( $this->args as $k => $v ) {
+			$this->set( $k, $v );
+		}
+		
+	} // end function set_import_args 
+	
+	
+	
+	
+	
+	
+	/**
+	 * do_action
+	 *
+	 * @version 1.1
+	 * @updated 02.04.14
+	 *
+	 * Description:
+	 * Pass post id, author and type to an action.
 	 **/
 	function do_action() {
 		
-		if ( isset( $this->post['post_author'] ) AND ! empty( $this->post['post_author'] ) AND is_numeric( $this->post['post_author'] ) ) {
+		if ( isset( $this->post['post_author'] ) AND ! empty( $this->post['post_author'] ) AND is_numeric( $this->post['post_author'] ) AND $this->post['post_author'] >= 1 ) {
 			$this->set( 'post_author', $this->post['post_author'] );
+		} else if ( isset( $this->post_author ) AND ! empty( $this->post_author ) AND is_numeric( $this->post_author ) AND $this->post_author >= 1 ) {
+			$this->set( 'post_author', $this->post_author );
 		} else {
 			global $userdata;
 			$this->set( 'post_author', $userdata->ID );
@@ -406,6 +501,10 @@ class CreatePostsVCWP {
 	 *
 	 * @version 1.0
 	 * @updated 02.10.13
+	 *
+	 * Description:
+	 * Check to make sure that each post has the required
+	 * fields in order to be imported.
 	 **/
 	function has_post_data() {
 		
@@ -429,12 +528,15 @@ class CreatePostsVCWP {
 	 *
 	 * @version 1.0
 	 * @updated 02.10.13
+	 * 
+	 * Description:
+	 * Pre post for inserting in to database. Any added added post preparation
+	 * should be done at this point. 
 	 **/
 	function prep_post_data() {
 		
-		$this->existing_post_id();
+		$this->set_existing_post_id();
 		$this->overwrite_post();
-		$this->append_post();
 		
 	} // end function prep_post_data 
 	
@@ -444,14 +546,18 @@ class CreatePostsVCWP {
 	
 	
 	/**
-	 * existing_post_id
+	 * set_existing_post_id
 	 *
-	 * @version 1.0
-	 * @updated 02.10.13
+	 * @version 1.1
+	 * @updated 02.04.14
+	 *
+	 * Description:
+	 * Check for an existing post-id and set "existing_post_id".
 	 **/
-	function existing_post_id() {		
+	function set_existing_post_id() {		
 		global $wpdb;
 		
+		// if the post array already has a post-id don't bother checking the db
 		if ( isset( $this->post['ID'] ) AND is_numeric( $this->post['ID'] ) ) {
 			$this->set( 'existing_post_id', $this->post['ID'] );
 			return;
@@ -459,7 +565,7 @@ class CreatePostsVCWP {
 
 		// Set post_name
 		$post_name = sanitize_title_with_dashes( $this->post['post_title'] );
-		$post_type = $this->post['post_title'];
+		$post_type = $this->post['post_type'];
 
 		// Query DB
 		$querystr = "	SELECT $wpdb->posts.ID
@@ -467,8 +573,7 @@ class CreatePostsVCWP {
 
 						WHERE 
 							$wpdb->posts.post_name = '$post_name' AND 
-							$wpdb->posts.post_type = '$post_type' AND
-							$wpdb->posts.post_status IN ( 'publish', 'draft', 'private' )
+							$wpdb->posts.post_type = '$post_type'
 						";
 
 		$results = $wpdb->get_results( $querystr );
@@ -480,7 +585,7 @@ class CreatePostsVCWP {
 			$this->set( 'existing_post_id', false );
 		}
 		
-	} // end function existing_post_id 
+	} // end function set_existing_post_id 
 	
 	
 	
@@ -492,6 +597,10 @@ class CreatePostsVCWP {
 	 *
 	 * @version 1.0
 	 * @updated 02.10.13
+	 * 
+	 * Description:
+	 * If "overwrite_posts" is set and existing_post_id is set 
+	 * pass existing_post_id to the current post for use.
 	 **/
 	function overwrite_post() {
 		
@@ -499,49 +608,7 @@ class CreatePostsVCWP {
 			$this->post['ID'] = $this->existing_post_id;
 		}
 		
-	} // end function overwrite_post 
-	
-	
-	
-	
-	
-	
-	/**
-	 * append_post
-	 *
-	 * @version 1.0
-	 * @updated 02.10.13
-	 **/
-	function append_post() {
-		
-		if ( $this->append_posts AND isset( $this->post['ID'] ) AND is_numeric( $this->post['ID'] ) AND $this->post['ID'] > 0 ) {
-			unset( $this->post['ID'] );
-		} else if ( $this->append_posts == false ) {
-			$this->post['ignore'] = true;
-		}
-		
-	} // end function append_post
-	
-	
-	
-	
-	
-	
-	/**
-	 * post_ignored
-	 *
-	 * @version 1.0
-	 * @updated 02.10.13
-	 **/
-	function post_ignored() {
-		
-		if ( isset( $this->post['ignore'] ) AND $this->post['ignore'] == true ) {
-			return true;
-		} else {
-			return false;
-		}
-		
-	} // end function post_ignored 
+	} // end function overwrite_post
 	
 	
 	
@@ -553,6 +620,9 @@ class CreatePostsVCWP {
 	 *
 	 * @version 1.0
 	 * @updated 02.10.13
+	 *
+	 * Description:
+	 * Import single post.
 	 **/
 	function import_post() {
 		
@@ -560,7 +630,6 @@ class CreatePostsVCWP {
 		if ( ! $this->has_import_errors() ) {
 			$this->set( 'current_post_id', $this->imported_post_ids[$this->current_post] );
 			$this->add_post_meta();
-			$this->add_post_options();
 			$this->add_post_terms();
 		} else {
 			$this->set( 'current_post_id', null );
@@ -579,12 +648,17 @@ class CreatePostsVCWP {
 	/**
 	 * wp_insert_post
 	 *
-	 * @version 1.0
-	 * @updated 02.10.13
+	 * @version 1.1
+	 * @updated 02.04.14
+	 * 
+	 * Description:
+	 * Insert post using wordpress wp_insert_post()
+	 * Add returned post_id to the imported post ids array.
+	 * Filter is available for last min alterations.
 	 **/
 	function wp_insert_post() {
 		
-		$this->imported_post_ids[$this->current_post] = wp_insert_post( apply_filters( 'create-posts-vcwp--insert-post', $this->post ) );
+		$this->imported_post_ids[$this->current_post] = wp_insert_post( apply_filters( 'create-posts-vcwp--insert-post', $this->post, $this ) );
 		
 	} // end function wp_insert_post
 	
@@ -598,6 +672,9 @@ class CreatePostsVCWP {
 	 *
 	 * @version 1.0
 	 * @updated 02.10.13
+	 * 
+	 * Description:
+	 * User wp is_wp_error to check for errors.
 	 **/
 	function has_import_errors() {
 		
@@ -703,62 +780,6 @@ class CreatePostsVCWP {
 	
 	
 	/**
-	 * add_post_options
-	 *
-	 * @version 1.0
-	 * @updated 02.16.13
-	 **/
-	function add_post_options() {
-		
-		if ( $this->has_post_options() AND $this->has_current_post_id() ) {
-			
-			if ( ! class_exists( 'CreatePostsOptionsVCWP' ) ) {
-				require_once( 'CreatePostsOptionsVCWP.php' );
-			}
-			
-			if ( class_exists( 'CreatePostsOptionsVCWP' ) ) {
-				$this->_post_options = new CreatePostsOptionsVCWP();
-				$this->_post_options->set( 'post_id', $this->current_post_id );
-				$this->_post_options->set( 'post_options', $this->post_options );
-				// $this->_post_options->set( 'sanitize_option_key', true ); // default = true 
-				// $this->_post_options->set( 'single_option_filter_name', 'filter-single-post-option-vcwp' ); // default = filter-single-post-option-vcwp
-				
-				$this->_post_options->add_post_options();
-				
-				$this->append_post_option_group();
-			}
-			
-		}
-		
-	} // end function add_post_options
-	
-	
-	
-	
-	
-	
-	/**
-	 * has_post_options
-	 *
-	 * @version 1.0
-	 * @updated 02.10.13
-	 **/
-	function has_post_options() {
-		
-		if ( isset( $this->post_options ) AND ! empty( $this->post_options ) AND is_array( $this->post_options ) ) {
-			return true;
-		} else {
-			return false;
-		}
-		
-	} // end function has_post_options 
-	
-	
-	
-	
-	
-	
-	/**
 	 * add_post_terms
 	 *
 	 * @version 1.0
@@ -828,6 +849,9 @@ class CreatePostsVCWP {
 	 *
 	 * @version 1.0
 	 * @updated 02.10.13
+	 * 
+	 * Description:
+	 * Check for incoming post and iterate the loop
 	 **/
 	function have_posts() {
 		
@@ -861,17 +885,18 @@ class CreatePostsVCWP {
 	/**
 	 * has posts
 	 *
-	 * @version 1.0
-	 * @updated 02.10.13
+	 * @version 1.1
+	 * @updated 02.04.14
 	 **/
 	function has_posts() {
 	    
-	    if ( is_array( $this->posts ) AND ! empty( $this->posts ) ) {
-			$this->set( 'has_posts', true );
-	        return true;
+	    if ( isset( $this->posts ) AND ! empty( $this->posts ) AND is_array( $this->posts ) ) {
+			$this->set( 'has_posts', 1 );
 	    } else {
-	        return false;
+	        $this->set( 'has_posts', 0 );
 		}
+		
+		return $this->has_posts;
 	    
 	} // end function has_posts
 	
@@ -900,10 +925,14 @@ class CreatePostsVCWP {
 	
 	
 	/**
-	 * The Item
+	 * The Post
 	 *
 	 * @version 1.0
 	 * @updated 02.10.13
+	 * 
+	 * Description:
+	 * Disperse post data to various locations for further use.
+	 * post, post_meta, post_terms, post_options
 	 **/
 	function the_post() {
 		
@@ -912,7 +941,6 @@ class CreatePostsVCWP {
 		$this->set_iterating_post( 'post_meta', 'post_meta' );
 		$this->set_iterating_post( 'post_terms', 'post_terms' );
 		$this->set_iterating_post( 'post_options', 'post_options' );
-		$this->set_iterating_post( 'id', 'post_identifier' );
 		
 	} // end function the_post
 	

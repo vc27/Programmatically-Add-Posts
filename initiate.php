@@ -19,7 +19,7 @@ if ( ! defined('CreatePosts_INIT') ) {
 	 * @version 1.0
 	 * @updated	00.00.00
 	 **/
-	function create__posts( $posts, $overwrite_posts = false ) {
+	function create__posts( $posts, $args ) {
 
 		$create_posts = false;
 		if ( ! class_exists( 'CreatePostsVCWP' ) ) {
@@ -29,8 +29,7 @@ if ( ! defined('CreatePosts_INIT') ) {
 		if ( class_exists( 'CreatePostsVCWP' ) ) {
 
 			$create_posts = new CreatePostsVCWP();
-			$create_posts->set( 'overwrite_posts', $overwrite_posts );
-			$create_posts->add_posts( $posts );
+			$create_posts->add_posts( $posts, $args );
 
 		}
 

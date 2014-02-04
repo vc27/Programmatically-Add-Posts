@@ -2,7 +2,7 @@
 /**
  * File Name CreatePostsTermsVCWP.php
  * @package WordPress
- * @subpackage ParentTheme
+ * @subpackage CreatePostsVCWP
  * @license GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * @version 1.0
  * @updated 03.10.13
@@ -25,6 +25,7 @@ if ( class_exists( 'CreatePostsTermsVCWP' ) ) return;
 class CreatePostsTermsVCWP {
 	
 	
+	
 	/**
 	 * overwrite_terms
 	 * 
@@ -36,6 +37,8 @@ class CreatePostsTermsVCWP {
 	 **/
 	var $append_terms = false;
 	
+	
+	
 	/**
 	 * post_id
 	 * 
@@ -46,6 +49,8 @@ class CreatePostsTermsVCWP {
 	 * Current id of imported post.
 	 **/
 	var $post_id = null;
+	
+	
 	
 	/**
 	 * terms

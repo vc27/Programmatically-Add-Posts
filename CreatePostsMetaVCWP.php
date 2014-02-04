@@ -2,7 +2,7 @@
 /**
  * File Name CreatePostsMetaVCWP.php
  * @package WordPress
- * @subpackage ParentTheme
+ * @subpackage CreatePostsVCWP
  * @license GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * @version 1.0
  * @updated 02.14.13
@@ -25,6 +25,7 @@ if ( class_exists( 'CreatePostsMetaVCWP' ) ) return;
 class CreatePostsMetaVCWP {
 	
 	
+	
 	/**
 	 * overwrite_meta_data
 	 * 
@@ -35,6 +36,8 @@ class CreatePostsMetaVCWP {
 	 * Bool to decide if existing meta data should be overwritten by incoming meta data.
 	 **/
 	var $overwrite_meta_data = false;
+	
+	
 	
 	/**
 	 * post_id
@@ -47,6 +50,8 @@ class CreatePostsMetaVCWP {
 	 **/
 	var $post_id = null;
 	
+	
+	
 	/**
 	 * post_meta
 	 * 
@@ -58,6 +63,8 @@ class CreatePostsMetaVCWP {
 	 **/
 	var $post_meta = null;
 	
+	
+	
 	/**
 	 * Sanitize Key
 	 * 
@@ -65,6 +72,8 @@ class CreatePostsMetaVCWP {
 	 * @var bool
 	 **/
 	var $sanitize_meta_key = true; 
+	
+	
 	
 	/**
 	 * Single Meta Data Filter Name
