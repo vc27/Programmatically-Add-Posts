@@ -27,16 +27,16 @@ $import_posts_array = array(
 			'post_author' => 1,
 			'post_type' => 'post',
 		),
-		/*'post_meta' => array(
-			'key' => array(
-				'key' => 'key',
+		'post_meta' => array(
+			'special-key' => array(
+				'key' => 'special-key',
 				'value' => 'value',
 				'unique' => 0,
 				'prev_value' => 0,
 				'pre_delete' => 0
 			),
 		),
-		'post_terms' => array(
+		/*'post_terms' => array(
 			'taxonomy' => array(
 				'append_terms' => false,
 				'taxonomy' => 'value',

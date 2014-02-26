@@ -20,6 +20,6 @@ if ( ! is_user_logged_in() OR ! current_user_can('install_themes') ) {
 
 
 
-$deleted_post = wp_delete_post( 62, true );
+$deleted_post = wp_delete_post( 71, true );
 
 print_r($deleted_post); die();

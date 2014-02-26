@@ -15,7 +15,7 @@
 if ( ! defined('THEME_ADDONS_INIT') ) {
 	
 	// Added Functionality
-	require_once( "ProgramaticallyAddPosts/initiate.php" );
+	require_once( "ProgrammaticallyAddPosts/initiate.php" );
 	
 	define( 'THEME_ADDONS_INIT', true );
 	

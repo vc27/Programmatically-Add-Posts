@@ -19,7 +19,7 @@ if ( ! is_user_logged_in() OR ! current_user_can('install_themes') ) {
 }
 
 $post = array( // post array
-	'ID' => 62, // Are you updating an existing post?
+	'ID' => 71, // Are you updating an existing post?
 	'post_content' => 'Proin quis dolor et lectus mollis auctor. Nam in lacus arcu. Etiam in pretium libero. Nunc ut massa id libero condimentum dapibus.', // The full text of the post.
 	'post_name' => 'lectus-mollis', // The name (slug) for your post
 	'post_title' => 'Lectus Mollis', // The title of your post.
